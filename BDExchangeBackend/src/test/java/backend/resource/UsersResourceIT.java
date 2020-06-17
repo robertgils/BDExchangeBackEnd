@@ -16,11 +16,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.net.URL;
 
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -72,14 +73,38 @@ public class UsersResourceIT {
     }
 
     @Test
-    public void testUsersEndpointGetAll2() {
-        System.out.println("UsersResource = " + usersResource);
+    public void testUsersEndpointGetID() {
+        System.out.println("UsersResource = " + usersResource + "/102");
         String message = ClientBuilder.newClient()
-                .target(usersResource)
+                .target(usersResource + "/102")
                 .request(MediaType.APPLICATION_JSON)
                 .get(String.class);
 
         System.out.println(message);
-        assertThat(message, containsString("[{\"id\":"));
+        assertThat(message, containsString("{\"id\":"));
+    }
+
+    @Test
+    public void testUsersEndpointQueryParam() {
+        System.out.println("UsersResource = " + usersResource + "/q?email=123@123.nl&password=123");
+        String message = ClientBuilder.newClient()
+                .target(usersResource + "/q?email=123@123.nl&password=123")
+                .request(MediaType.APPLICATION_JSON)
+                .get(String.class);
+
+        System.out.println(message);
+        assertThat(message, containsString("{\"id\":"));
+    }
+
+    @Test
+    public void testUsersEndpointPost() {
+        System.out.println("UsersResource = " + usersResource);
+        User testUser = new User("TestUser@Test.nl", "Test1234");
+        User response = ClientBuilder.newClient()
+                .target(usersResource)
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.json(testUser), User.class);
+
+        assertThat(response.getId(), is(not(nullValue())));
     }
 }

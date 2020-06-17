@@ -16,10 +16,6 @@ public class UsersResource {
     private UserDao dao;
 
     @GET
-    @Path("/test")
-    public String helloWorld() { return "Hello World"; }
-
-    @GET
     public List<User> getAll() {
         return dao.getAll();
     }
