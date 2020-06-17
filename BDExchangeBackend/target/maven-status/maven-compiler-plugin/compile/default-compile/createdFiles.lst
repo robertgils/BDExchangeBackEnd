@@ -1,0 +1,5 @@
+backend\resource\UsersResource.class
+backend\domain\DeliveryOptions.class
+backend\dao\UserDao.class
+backend\App.class
+backend\domain\User.class
